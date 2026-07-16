@@ -1,0 +1,55 @@
+<!-- The problem is architectural: Tailwind v4 statically extracts classes at build time. Classes added at runtime via a Storybook control do not get included in the CSS. -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4.3.0/dist/index.global.min.js"></script>
+
+<!-- @tailwindcss/browser generates CSS at runtime for classes typed in Storybook controls, which are not statically extracted by Tailwind v4 at build time. -->
+<style type="text/tailwindcss">
+  @theme inline {
+    --font-sans: var(--font-sans);
+
+    --color-border: var(--border);
+    --color-ring: var(--ring);
+
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-constructive: var(--constructive);
+    --color-constructive-foreground: var(--constructive-foreground);
+    --color-informative: var(--informative);
+    --color-informative-foreground: var(--informative-foreground);
+    --color-warning: var(--warning);
+    --color-warning-foreground: var(--warning-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+
+    --color-secondary-disabled: var(--secondary-disabled);
+    --color-secondary-foreground-disabled: var(--secondary-foreground-disabled);
+    --color-constructive-active: var(--constructive-active);
+    --color-constructive-foreground-active: var(--constructive-foreground-active);
+    --color-constructive-disabled: var(--constructive-disabled);
+    --color-constructive-foreground-disabled: var(--constructive-foreground-disabled);
+    --color-destructive-active: var(--destructive-active);
+    --color-destructive-foreground-active: var(--destructive-foreground-active);
+    --color-destructive-disabled: var(--destructive-disabled);
+    --color-destructive-foreground-disabled: var(--destructive-foreground-disabled);
+    --color-accent-disabled: var(--accent-disabled);
+    --color-accent-foreground-disabled: var(--accent-foreground-disabled);
+
+    --shadow-toaster: var(--shadow-toaster);
+  }
+</style>

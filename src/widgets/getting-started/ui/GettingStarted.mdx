@@ -1,0 +1,343 @@
+import { Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Getting Started/Installation and Use" />
+
+# Установка и использование
+
+Эта страница описывает, как подключить `ui-kit` в проект-потребитель и какие шаги нужны для корректной работы стилей, компонентов и опциональных addons.
+
+`src/widgets` используется только для страниц и виджетов Storybook. Код из этой папки не входит в публичное API библиотеки, поэтому в приложениях нужно импортировать пакет через опубликованные entrypoint'ы.
+
+---
+
+## Требования
+
+<table>
+  <thead>
+    <tr>
+      <th>Инструмент</th>
+      <th>Требование</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Node.js</td>
+      <td>
+        <code>&gt;=24.0.0</code>
+      </td>
+    </tr>
+    <tr>
+      <td>pnpm</td>
+      <td>
+        версия из <code>packageManager</code>
+      </td>
+    </tr>
+    <tr>
+      <td>React</td>
+      <td>
+        <code>&gt;=19</code>
+      </td>
+    </tr>
+    <tr>
+      <td>TypeScript</td>
+      <td>рекомендуется strict-настройка</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Установка
+
+Установите библиотеку:
+
+```bash
+pnpm add ui-kit
+```
+
+Установите обязательные peer dependencies:
+
+```bash
+pnpm add sonner @tabler/icons-react
+```
+
+Если используете `Form` или примеры с валидацией, установите опциональные зависимости:
+
+```bash
+pnpm add @hookform/resolvers react-hook-form valibot
+```
+
+Обязательные зависимости:
+
+<table>
+  <thead>
+    <tr>
+      <th>Пакет</th>
+      <th>Когда нужен</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>sonner</code>
+      </td>
+      <td>
+        уведомления <code>Toaster</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>@tabler/icons-react</code>
+      </td>
+      <td>иконки компонентов</td>
+    </tr>
+  </tbody>
+</table>
+
+Опциональные зависимости:
+
+<table>
+  <thead>
+    <tr>
+      <th>Пакет</th>
+      <th>Когда нужен</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>@hookform/resolvers</code>
+      </td>
+      <td>
+        addon <code>Form</code> и валидация
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>react-hook-form</code>
+      </td>
+      <td>
+        addon <code>Form</code>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <code>valibot</code>
+      </td>
+      <td>примеры схем валидации формы</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## Подключение стилей
+
+Подключите стили в корневом CSS-файле приложения:
+
+```css
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@import 'ui-kit/styles';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: var(--font-sans);
+
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-constructive: var(--constructive);
+  --color-constructive-foreground: var(--constructive-foreground);
+  --color-informative: var(--informative);
+  --color-informative-foreground: var(--informative-foreground);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+
+  --color-secondary-disabled: var(--secondary-disabled);
+  --color-secondary-foreground-disabled: var(--secondary-foreground-disabled);
+  --color-constructive-active: var(--constructive-active);
+  --color-constructive-foreground-active: var(--constructive-foreground-active);
+  --color-constructive-disabled: var(--constructive-disabled);
+  --color-constructive-foreground-disabled: var(--constructive-foreground-disabled);
+  --color-destructive-active: var(--destructive-active);
+  --color-destructive-foreground-active: var(--destructive-foreground-active);
+  --color-destructive-disabled: var(--destructive-disabled);
+  --color-destructive-foreground-disabled: var(--destructive-foreground-disabled);
+  --color-accent-disabled: var(--accent-disabled);
+  --color-accent-foreground-disabled: var(--accent-foreground-disabled);
+
+  --shadow-toaster: var(--shadow-toaster);
+}
+
+@layer base {
+  * {
+    @apply scrollbar-thin scrollbar-thumb-[#dedfe1] scrollbar-track-background border-border outline-hidden dark:scrollbar-thumb-[#3a3d45];
+  }
+
+  :focus-visible {
+    @apply ring-3 ring-ring;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+```
+
+`ui-kit/styles` уже содержит Tailwind CSS 4 `@source` для собранных модулей библиотеки. Не добавляйте отдельный `@source` на `node_modules/ui-kit`.
+
+Библиотека использует корпоративный шрифт `pnfont`. Файлы шрифтов не входят в пакет, поэтому их нужно разместить в проекте-потребителе:
+
+```txt
+public/fonts/pnfont/
+```
+
+---
+
+## Импорты
+
+Конфигурация импортируется из `ui-kit/config`:
+
+```ts
+import { FIELD_LENGTHS, MEDIA_QUERIES, OTP_PATTERNS } from 'ui-kit/config'
+```
+
+Утилиты, типы и хуки импортируются из `ui-kit/lib`:
+
+```ts
+import {
+  classNames,
+  formatCreditCard,
+  getRequiredEnv,
+  getFormDigitsValue,
+  isValidCreditCardNumber,
+  parseCreditCardExpiry,
+  useMeasure,
+  useMediaQuery,
+  type SelectOption,
+} from 'ui-kit/lib'
+```
+
+Addon `Form` импортируется из отдельного subpath:
+
+```ts
+import { Form } from 'ui-kit/addons/form'
+```
+
+Core-компоненты импортируются из `ui-kit/core`:
+
+```ts
+import { BUTTON_SIZES, BUTTON_VARIANTS, buttonVariants, type ButtonProps, type ButtonSize, type ButtonVariant } from 'ui-kit/core'
+```
+
+---
+
+## Публичные entrypoint'ы
+
+<table>
+  <thead>
+    <tr>
+      <th>Entry point</th>
+      <th>Назначение</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <code>ui-kit/config</code>
+      </td>
+      <td>конфигурация и константы</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ui-kit/lib</code>
+      </td>
+      <td>утилиты, типы и хуки</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ui-kit/styles</code>
+      </td>
+      <td>CSS-переменные, темы и Tailwind</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ui-kit/addons</code>
+      </td>
+      <td>общий entrypoint addons</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ui-kit/addons/*</code>
+      </td>
+      <td>отдельные addons</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ui-kit/core</code>
+      </td>
+      <td>общий entrypoint core-компонентов</td>
+    </tr>
+    <tr>
+      <td>
+        <code>ui-kit/core/*</code>
+      </td>
+      <td>отдельные core-компоненты</td>
+    </tr>
+  </tbody>
+</table>
+
+Не импортируйте компоненты из `src/shared` или `src/widgets` в проекте-потребителе. Эти пути относятся к исходникам репозитория, а стабильный контракт пакета описан через entrypoint'ы выше.
+
+---
+
+## Локальная разработка
+
+Установите зависимости репозитория:
+
+```bash
+pnpm install
+```
+
+Перед завершением изменений используйте узкие проверки:
+
+```bash
+pnpm lint
+pnpm check
+```
+
+Запустите Storybook:
+
+```bash
+pnpm storybook
+```
+
+Если менялись Storybook-страницы, документация или визуальные примеры, проверьте сборку Storybook:
+
+```bash
+pnpm build-storybook
+```

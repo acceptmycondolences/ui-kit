@@ -1,0 +1,122 @@
+/* https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-registering-sources */
+@source '../ui';
+
+@font-face {
+  font-family: 'pnfont';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/pnfont/pnfont-regular.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'pnfont';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/pnfont/pnfont-medium.woff2') format('woff2');
+}
+
+@font-face {
+  font-family: 'pnfont';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/pnfont/pnfont-semibold.woff2') format('woff2');
+}
+
+:root {
+  --font-sans: 'pnfont';
+
+  --border: hsl(0, 0%, 88%);
+  --ring: hsl(147, 75%, 37%, 0.4);
+
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(225, 9%, 9%);
+  --muted: hsl(210, 23%, 95%);
+  --muted-foreground: hsl(227, 5%, 61%);
+
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(220, 9%, 13%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(220, 9%, 13%);
+
+  --primary: hsl(225, 9%, 9%);
+  --primary-foreground: hsl(0, 0%, 100%);
+  --secondary: hsl(210, 23%, 95%);
+  --secondary-foreground: hsl(224, 8%, 35%);
+  --constructive: hsl(147, 75%, 37%);
+  --constructive-foreground: hsl(0, 0%, 100%);
+  --informative: hsl(209, 85%, 47%);
+  --informative-foreground: hsl(0, 0%, 100%);
+  --warning: hsl(40, 100%, 42%);
+  --warning-foreground: hsl(0, 0%, 100%);
+  --destructive: hsl(0, 100%, 97%);
+  --destructive-foreground: hsl(0, 69%, 56%);
+  --accent: hsl(210, 23%, 95%);
+  --accent-foreground: hsl(224, 8%, 35%);
+
+  --sidebar: hsl(0, 0%, 100%);
+  --sidebar-foreground: hsl(227, 5%, 61%);
+
+  --secondary-disabled: hsl(210, 23%, 95%);
+  --secondary-foreground-disabled: hsl(220, 5%, 88%);
+  --constructive-active: hsl(147, 75%, 30%);
+  --constructive-foreground-active: hsl(0, 0%, 100%);
+  --constructive-disabled: hsl(148, 57%, 95%);
+  --constructive-foreground-disabled: hsl(147, 53%, 83%);
+  --destructive-active: hsl(0, 95%, 84%);
+  --destructive-foreground-active: hsl(0, 55%, 46%);
+  --destructive-disabled: hsl(0, 100%, 97%);
+  --destructive-foreground-disabled: hsl(0, 96%, 90%);
+  --accent-disabled: hsl(220, 5%, 88%);
+  --accent-foreground-disabled: hsl(220, 5%, 88%);
+
+  --shadow-toaster:
+    0 29px 146px 0 rgba(0, 0, 0, 0.04), 0 -4.2px 23.725px 0 rgba(0, 0, 0, 0.05), 0 1.269px 8.441px 0 rgba(0, 0, 0, 0.03);
+}
+
+.dark {
+  --border: hsl(227, 8%, 21%);
+
+  --background: hsl(225, 9%, 9%);
+  --foreground: hsl(210, 23%, 95%);
+  --muted: hsl(227, 8%, 21%);
+  --muted-foreground: hsl(224, 4%, 48%);
+
+  --card: hsl(220, 9%, 13%);
+  --card-foreground: hsl(0, 0%, 100%);
+  --popover: hsl(220, 9%, 13%);
+  --popover-foreground: hsl(0, 0%, 100%);
+
+  --primary: hsl(210, 23%, 95%);
+  --primary-foreground: hsl(225, 9%, 9%);
+  --secondary: hsl(227, 8%, 21%);
+  --secondary-foreground: hsl(220, 5%, 88%);
+  --constructive: hsl(147, 75%, 37%);
+  --constructive-foreground: hsl(210, 23%, 95%);
+  --informative: hsl(209, 98%, 54%);
+  --informative-foreground: hsl(210, 23%, 95%);
+  --warning: hsl(40, 100%, 42%);
+  --warning-foreground: hsl(210, 23%, 95%);
+  --destructive: hsl(0, 55%, 19%);
+  --destructive-foreground: hsl(0, 69%, 56%);
+  --accent: hsl(227, 8%, 21%);
+  --accent-foreground: hsl(220, 5%, 88%);
+
+  --sidebar: hsl(225, 9%, 9%);
+  --sidebar-foreground: hsl(224, 4%, 48%);
+
+  --secondary-disabled: hsl(227, 8%, 21%);
+  --secondary-foreground-disabled: hsl(222, 8%, 30%);
+  --constructive-active: hsl(147, 75%, 30%);
+  --constructive-foreground-active: hsl(0, 0%, 100%);
+  --constructive-disabled: hsl(147, 74%, 18%);
+  --constructive-foreground-disabled: hsl(147, 75%, 25%);
+  --destructive-active: hsl(0, 54%, 27%);
+  --destructive-foreground-active: hsl(0, 55%, 46%);
+  --destructive-disabled: hsl(0, 100%, 97%);
+  --destructive-foreground-disabled: hsl(0, 96%, 90%);
+  --accent-disabled: hsl(222, 8%, 30%);
+  --accent-foreground-disabled: hsl(222, 8%, 30%);
+}

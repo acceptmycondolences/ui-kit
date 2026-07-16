@@ -1,0 +1,17 @@
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - '@eslint-react/ast@5.16.1'
+  - '@eslint-react/core@5.16.1'
+  - '@eslint-react/eslint@5.16.1'
+  - '@eslint-react/jsx@5.16.1'
+  - '@eslint-react/shared@5.16.1'
+  - '@eslint-react/var@5.16.1'
+  - '@microsoft/api-extractor-model@7.33.9'
+  - '@microsoft/api-extractor@7.58.10'
+  - '@rushstack/node-core-library@5.23.2'
+  - '@rushstack/terminal@0.24.1'
+  - '@rushstack/ts-command-line@5.3.11'
+  - eslint-plugin-react-dom@5.16.1
+  - eslint-plugin-react-x@5.16.1
+  - prettier-plugin-tailwindcss@0.8.1
