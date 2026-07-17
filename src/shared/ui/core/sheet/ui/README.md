@@ -122,6 +122,7 @@ SheetHeader (isClose={false} → SheetBack)
 | Токен                    | Описание                                                             |
 | :----------------------- | :------------------------------------------------------------------- |
 | `--background`           | Фон `SheetContent`                                                   |
+| `--border`               | Граница `SheetContent` и нижняя граница `SheetHeader`                |
 | `--foreground`           | Текст `SheetContent`                                                 |
 | `--muted-foreground`     | Цвет иконок `SheetClose` и `SheetBack` в обычном состоянии (десктоп) |
 | `--primary`              | Цвет иконок `SheetClose` и `SheetBack` при наведении (десктоп)       |

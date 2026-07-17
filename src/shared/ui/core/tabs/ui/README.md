@@ -68,6 +68,7 @@ Tabs
 | Токен                              | Описание                                      |
 | :--------------------------------- | :-------------------------------------------- |
 | `--background`                     | Фон `TabsList`                                |
+| `--border`                         | Граница `TabsList`                            |
 | `--constructive`                   | Фон активного `TabsTrigger`                   |
 | `--constructive-active`            | Фон активного `TabsTrigger` при наведении     |
 | `--constructive-foreground`        | Текст активного `TabsTrigger`                 |

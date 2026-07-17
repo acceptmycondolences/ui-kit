@@ -133,13 +133,14 @@ AlertDialog
 
 Токены, используемые компонентом. Переопределяются на уровне темы через `:root` или `.dark`.
 
-| Токен                    | Описание                                       |
-| :----------------------- | :--------------------------------------------- |
-| `--background`           | Фон `AlertDialogContent`                       |
-| `--foreground`           | Текст `AlertDialogContent`                     |
-| `--muted-foreground`     | Цвет иконки `AlertDialogX` в обычном состоянии |
-| `--primary`              | Цвет иконки `AlertDialogX` при наведении       |
-| `--secondary-foreground` | Цвет текста `AlertDialogDescription`           |
+| Токен                    | Описание                                           |
+| :----------------------- | :------------------------------------------------- |
+| `--background`           | Фон `AlertDialogContent`                           |
+| `--border`               | Граница `AlertDialogContent` и `AlertDialogFooter` |
+| `--foreground`           | Текст `AlertDialogContent`                         |
+| `--muted-foreground`     | Цвет иконки `AlertDialogX` в обычном состоянии     |
+| `--primary`              | Цвет иконки `AlertDialogX` при наведении           |
+| `--secondary-foreground` | Цвет текста `AlertDialogDescription`               |
 
 ---
 

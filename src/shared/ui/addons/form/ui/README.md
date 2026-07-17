@@ -477,3 +477,18 @@ const form = useForm<v.InferOutput<typeof Schema>>({
 ```
 
 При ошибке валидации поле автоматически получает `aria-invalid` и связывается с `FieldError` через `aria-describedby`, если у ошибки есть сообщение. Описание поля также подключается через `aria-describedby`.
+
+---
+
+## CSS API
+
+Токены, используемые компонентом. Переопределяются на уровне темы через `:root` или `.dark`.
+
+| Токен                      | Описание                                                                |
+| :------------------------- | :---------------------------------------------------------------------- |
+| `--border`                 | Цвет разделителя в `FormComboboxField`                                  |
+| `--destructive`            | Фон полей в состоянии `aria-invalid`                                    |
+| `--destructive-foreground` | Текст, плейсхолдер, иконки и кольцо полей в состоянии `aria-invalid`    |
+| `--muted`                  | Фон триггеров `FormComboboxField` и `FormSelectField`                   |
+| `--muted-foreground`       | Плейсхолдер и текст количества выбранных значений в `FormComboboxField` |
+| `--primary`                | Текст выбранных пунктов в `FormComboboxField`                           |

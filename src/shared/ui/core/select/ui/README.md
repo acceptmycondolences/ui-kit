@@ -136,6 +136,7 @@ Select
 | :------------------------- | :----------------------------------------------------------------------------- |
 | `--accent`                 | Фон `SelectItem` при фокусе                                                    |
 | `--accent-foreground`      | Текст `SelectItem` при фокусе                                                  |
+| `--border`                 | Граница `SelectContent`                                                        |
 | `--constructive`           | Цвет иконки-галочки у выбранного `SelectItem`                                  |
 | `--destructive-foreground` | Текст, плейсхолдер, иконка и кольцо `SelectTrigger` в состоянии `aria-invalid` |
 | `--muted-foreground`       | Цвет иконки-стрелки в `SelectTrigger`                                          |

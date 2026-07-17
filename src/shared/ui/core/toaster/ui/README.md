@@ -79,11 +79,14 @@ export function Providers({ children }: ProvidersProps) {
 
 | Токен                      | Описание                                      |
 | :------------------------- | :-------------------------------------------- |
+| `--border`                 | Граница уведомления                           |
 | `--constructive`           | Цвет иконки варианта `success`                |
 | `--destructive-foreground` | Цвет иконки варианта `error`                  |
+| `--font-sans`              | Шрифт уведомления                             |
 | `--informative`            | Цвет иконки варианта `info`                   |
 | `--muted-foreground`       | Цвет иконки закрытия в состоянии по умолчанию |
 | `--popover`                | Фон уведомления                               |
 | `--popover-foreground`     | Цвет заголовка и описания                     |
 | `--primary`                | Цвет иконки закрытия при наведении            |
+| `--shadow-toaster`         | Тень уведомления                              |
 | `--warning`                | Цвет иконки варианта `warning`                |

@@ -6,30 +6,30 @@ UI-компоненты на основе Tailwind CSS и Radix UI. Постав
 
 ## Технологический стек
 
-| Инструмент               | Назначение                                          |
-| ------------------------ | --------------------------------------------------- |
-| Node.js                  | Среда выполнения (>=24.0.0, engineStrict)           |
-| pnpm                     | Пакетный менеджер (11.13.1)                         |
-| Vite                     | Сборщик (library mode)                              |
-| React                    | >=19 (peer dependency)                              |
-| TypeScript               | Статическая типизация (strict mode)                 |
-| ESLint                   | Линтер                                              |
-| Prettier                 | Форматирование кода                                 |
-| Husky + lint-staged      | Git-хуки: проверка измененных файлов перед коммитом |
-| Tailwind CSS             | Утилитарные стили (v4)                              |
-| tw-animate-css           | Анимации для Tailwind CSS                           |
-| class-variance-authority | Типизированные варианты компонентов                 |
-| clsx                     | Условная сборка className                           |
-| cmdk                     | Примитив Command Menu                               |
-| input-otp                | Примитив OTP-ввода                                  |
-| Radix UI                 | Примитивы доступных компонентов                     |
-| tailwind-merge           | Слияние Tailwind-классов без конфликтов             |
-| vaul                     | Примитив Drawer                                     |
-| Storybook                | Разработка и документация компонентов               |
-| Vitest + Playwright      | Тестирование компонентов через Storybook            |
-| vite-bundle-analyzer     | Анализ бандла Vite                                  |
-| @tailwindcss/vite        | Интеграция Tailwind CSS с Vite                      |
-| unplugin-dts             | Генерация TypeScript-деклараций                     |
+| Инструмент               | Назначение                                              |
+| ------------------------ | ------------------------------------------------------- |
+| Node.js                  | Среда выполнения (>=24.0.0, engineStrict)               |
+| pnpm                     | Пакетный менеджер (11.13.1)                             |
+| Vite                     | Сборщик (library mode)                                  |
+| React                    | >=19 (peer dependency)                                  |
+| TypeScript               | Статическая типизация (strict mode)                     |
+| ESLint                   | Линтер                                                  |
+| Prettier                 | Форматирование кода                                     |
+| Husky + lint-staged      | Git-хуки: проверка измененных файлов перед коммитом     |
+| Tailwind CSS             | Утилитарные стили (v4)                                  |
+| tw-animate-css           | Анимации для Tailwind CSS                               |
+| class-variance-authority | Типизированные варианты компонентов                     |
+| clsx                     | Условная сборка className                               |
+| cmdk                     | Примитив Command Menu                                   |
+| input-otp                | Примитив OTP-ввода                                      |
+| Radix UI                 | Примитивы доступных компонентов                         |
+| tailwind-merge           | Слияние Tailwind-классов без конфликтов                 |
+| vaul                     | Примитив Drawer                                         |
+| Storybook                | Разработка и документация компонентов                   |
+| Vitest + Playwright      | Тестирование компонентов через Storybook                |
+| vite-bundle-analyzer     | Опциональный анализ бандла Vite (по умолчанию отключен) |
+| @tailwindcss/vite        | Интеграция Tailwind CSS с Vite                          |
+| unplugin-dts             | Генерация TypeScript-деклараций                         |
 
 ---
 
@@ -123,7 +123,7 @@ pnpm chromatic
 
 ## Публичное API
 
-Пакет предоставляет точки входа для конфигурации, утилит, стилей, core-компонентов и addons:
+Пакет предоставляет точки входа для конфигурации, утилит, стилей, addons и core-компонентов:
 
 ### Конфигурация
 
@@ -165,7 +165,15 @@ import {
 
 В проектах с Tailwind CSS 4 подключайте этот entrypoint через CSS `@import` в том же stylesheet, где импортируется `tailwindcss`, чтобы Tailwind обработал `@source`.
 
-### UI-компоненты
+### Addons
+
+`Form` использует опциональный `react-hook-form` и импортируется отдельно:
+
+```ts
+import { Form } from 'ui-kit/addons/form'
+```
+
+### Core UI-компоненты
 
 ```ts
 import { Badge, Button, LoadingDots } from 'ui-kit/core'
@@ -180,12 +188,6 @@ import { BUTTON_SIZES, BUTTON_VARIANTS, buttonVariants, type ButtonProps, type B
 Полный список компонентов core entrypoint:
 
 `Alert`, `AlertDialog`, `Badge`, `Button`, `Checkbox`, `Command`, `Dialog`, `Drawer`, `DropdownMenu`, `Field`, `Input`, `InputOTP`, `LoadingDots`, `Popover`, `Progress`, `SearchBar`, `Select`, `Sheet`, `Table`, `Tabs`, `Textarea`, `Toaster`
-
-`Form` использует опциональный `react-hook-form` и импортируется отдельно:
-
-```ts
-import { Form } from 'ui-kit/addons/form'
-```
 
 ---
 
@@ -321,12 +323,13 @@ pnpm add @hookform/resolvers react-hook-form valibot
 
 - **`copyPublicDir: false`** — папка `public/` не копируется в `dist/`
 - **`cssCodeSplit: true`** — стили каждого компонента выносятся в отдельный файл
-- **Точки входа:** `src/shared/config/index.ts` → `dist/config.js`, `src/shared/lib/index.ts` → `dist/lib.js`, `src/shared/styles/index.ts` → `dist/styles/index.js`, `src/shared/ui/addons/index.ts` → `dist/ui/addons/index.js`, `src/shared/ui/core/index.ts` → `dist/ui/core/index.js`, `src/shared/ui/addons/*/index.ts` → `dist/ui/addons/*/index.js`, `src/shared/ui/core/*/index.ts` → `dist/ui/core/*/index.js`
+- **Точки входа:** `src/shared/config/index.ts` → `dist/config.js`, `src/shared/lib/index.ts` → `dist/lib.js`, `src/shared/styles/index.ts` → `dist/styles/index.js`, `src/shared/ui/addons/index.ts` → `dist/ui/addons/index.js`, `src/shared/ui/addons/*/index.ts` → `dist/ui/addons/*/index.js`, `src/shared/ui/core/index.ts` → `dist/ui/core/index.js`, `src/shared/ui/core/*/index.ts` → `dist/ui/core/*/index.js`
 - **Формат:** `es` (ES Modules)
 - **`rolldownOptions`** — актуальный API Vite 8 (вместо устаревшего `rollupOptions`)
 - **`external`** — все пакеты из `dependencies` и `peerDependencies` автоматически исключаются из бандла
 - **`preserveModules: true`** — каждый компонент становится отдельным модулем в `dist/`, бандлер потребителя включает только используемые
 - **`sourcemap: true`** — source maps генерируются для удобства отладки
+- **`vite-bundle-analyzer`** — установлен для опционального анализа бандла, но его import и вызов плагина в `vite.config.ts` по умолчанию закомментированы
 - **`unplugin-dts`** — генерирует декларации только по структуре `src/shared`, включая `dist/ui/addons/index.d.ts`, `dist/ui/addons/*/index.d.ts`, `dist/ui/core/index.d.ts` и `dist/ui/core/*/index.d.ts`; Storybook-only код из `*.stories.tsx` и `src/widgets` в декларации пакета не входит
 
 ---

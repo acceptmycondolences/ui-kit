@@ -104,6 +104,7 @@ Popover
 
 | Токен                      | Описание                                                           |
 | :------------------------- | :----------------------------------------------------------------- |
+| `--border`                 | Граница `PopoverContent`                                           |
 | `--destructive-foreground` | Текст, иконка и кольцо `PopoverTrigger` в состоянии `aria-invalid` |
 | `--muted-foreground`       | Цвет иконки-стрелки в `PopoverTrigger`                             |
 | `--popover`                | Фон `PopoverContent`                                               |

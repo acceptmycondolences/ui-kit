@@ -254,11 +254,13 @@ Command
 | :------------------------- | :-------------------------------------------------------- |
 | `--accent`                 | Фон `CommandItem` при выделении                           |
 | `--accent-foreground`      | Текст `CommandItem` при выделении                         |
+| `--border`                 | Цвет `CommandSeparator`                                   |
 | `--constructive`           | Цвет каретки в `CommandInput`                             |
 | `--destructive`            | Фон `CommandInput` в состоянии `aria-invalid`             |
 | `--destructive-foreground` | Текст и каретка `CommandInput` в состоянии `aria-invalid` |
 | `--muted`                  | Фон `CommandInput`                                        |
 | `--muted-foreground`       | Цвет плейсхолдера и иконки поиска в `CommandInput`        |
+| `--primary`                | Текст выделенного `CommandItem` с кнопкой                 |
 | `--secondary-foreground`   | Цвет иконки и текста описания в `CommandEmpty`            |
 
 ---

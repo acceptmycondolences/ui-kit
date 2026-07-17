@@ -114,6 +114,7 @@ Drawer
 | Токен                    | Описание                                        |
 | :----------------------- | :---------------------------------------------- |
 | `--background`           | Фон `DrawerContent`                             |
+| `--border`               | Верхняя граница `DrawerContent`                 |
 | `--foreground`           | Текст `DrawerContent`                           |
 | `--muted`                | Цвет индикатора-ручки (drag handle)             |
 | `--secondary`            | Фон кнопки `DrawerClose`                        |

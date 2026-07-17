@@ -110,3 +110,4 @@ import { SearchBar } from 'ui-kit/core'
 | `--destructive-foreground/40`        | Кольцо (ring) в состоянии `aria-invalid`          |
 | `--muted`                            | Фон поля                                          |
 | `--muted-foreground`                 | Цвет placeholder и иконки в закрытом состоянии    |
+| `--primary`                          | Цвет иконок кнопок при наведении                  |

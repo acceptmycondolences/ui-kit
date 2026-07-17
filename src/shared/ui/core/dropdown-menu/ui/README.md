@@ -129,6 +129,7 @@ DropdownMenu
 | :--------------------- | :----------------------------------------------------------- |
 | `--accent`             | Фон `DropdownMenuItem` и других пунктов при фокусе           |
 | `--accent-foreground`  | Текст `DropdownMenuItem` и других пунктов при фокусе         |
+| `--border`             | Граница `DropdownMenuContent` и `DropdownMenuSubContent`     |
 | `--constructive`       | Цвет иконки-галочки у отмеченного `DropdownMenuCheckboxItem` |
 | `--popover`            | Фон `DropdownMenuContent` и `DropdownMenuSubContent`         |
 | `--popover-foreground` | Текст `DropdownMenuContent` и `DropdownMenuSubContent`       |

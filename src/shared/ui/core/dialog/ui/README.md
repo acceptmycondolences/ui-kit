@@ -110,6 +110,7 @@ Dialog
 | Токен                    | Описание                                      |
 | :----------------------- | :-------------------------------------------- |
 | `--background`           | Фон `DialogContent`                           |
+| `--border`               | Граница `DialogContent`                       |
 | `--foreground`           | Текст `DialogContent`                         |
 | `--muted-foreground`     | Цвет иконки `DialogClose` в обычном состоянии |
 | `--primary`              | Цвет иконки `DialogClose` при наведении       |
