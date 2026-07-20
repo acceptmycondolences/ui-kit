@@ -86,14 +86,14 @@ import type { Branch } from '~/entities/branch'
 В редких случаях слайсы внутри `entities` все же могут быть логически зависимы друг от друга. Для таких ситуаций FSD предусматривает специальный публичный API — нотацию `@x`:
 
 ```ts
-// entities/branch/index.ts
-export type { Branch } from './model/branch.types.ts'
+// entities/branch/@x/partner.ts
+export type { Branch } from '../model/branch.types'
 
-// entities/partner/@x/branch/index.ts  ← явный cross-import через @x
-export type { PartnerBranch } from './@x/branch/model/partner-branch.types.ts'
+// внутри entities/partner
+import type { Branch } from '~/entities/branch/@x/partner'
 ```
 
-`@x`-экспорты — это явный контракт: слайс сознательно открывает часть своего API для конкретного соседа. Использовать эту возможность стоит осознанно и минимально.
+`@x`-экспорты — это явный контракт: `branch` как владелец экспортируемого контракта сознательно открывает часть своего API только для `partner` как потребителя. Путь `branch/@x/partner` читается как «branch в пересечении с partner»; для этой зависимости обратный файл в `partner` не нужен. Использовать эту возможность стоит осознанно, минимально и только в слое `entities`.
 
 ---
 
@@ -160,7 +160,7 @@ entities/invoice/api/
 
 Префикс файла всегда совпадает с именем слайса — в той форме, в которой слайс назван. Если слайс называется `invoice`, префикс файла — `invoice`, а не `invoices`.
 
-Множественное число допустимо внутри файла — в именах переменных, функций и типов — если это семантически оправдано. Но имя файла всегда следует имени слайса.
+Имена API-контрактов также используют имя слайса в единственном числе: `invoiceClient`, `invoiceQueryKeys`, `invoiceQueryOptions`. Коллекционные операции выражаются назначением: `InvoiceListParams`, `InvoiceListResponse`, `getList`, а не множественным числом имени сущности.
 
 ### Разделение типов
 
@@ -171,6 +171,67 @@ entities/invoice/api/
 | `{entity}.params.ts`    | Типы параметров запросов: пагинация, сортировка, фильтры            |
 | `{entity}.responses.ts` | Типы ответов API: структуры данных, возвращаемых бэкендом           |
 | `{entity}.types.ts`     | Общие типы сущности: интерфейсы, перечисления, вспомогательные типы |
+
+### Стандарт API сущности
+
+Для списочного API используется единый контракт:
+
+```text
+entities/invoice/
+├── api/
+│   ├── invoice.client.ts
+│   └── invoice.queries.ts
+├── model/
+│   ├── invoice.params.ts
+│   ├── invoice.responses.ts
+│   └── invoice.types.ts
+└── index.ts
+```
+
+```ts
+// entities/invoice/api/invoice.client.ts
+import { axiosInstance } from '~/shared/api'
+import { PATHS } from '~/shared/config'
+
+import type { InvoiceListParams } from '../model/invoice.params'
+import type { InvoiceListResponse } from '../model/invoice.responses'
+
+export const invoiceClient = {
+  getList: async (params: InvoiceListParams, signal: AbortSignal) =>
+    (await axiosInstance.get<InvoiceListResponse>(`/${PATHS.INVOICE}`, { params, signal })).data,
+}
+```
+
+```ts
+// entities/invoice/api/invoice.queries.ts
+import { queryOptions } from '@tanstack/react-query'
+
+import { PATHS } from '~/shared/config'
+
+import type { InvoiceListParams } from '../model/invoice.params'
+import { invoiceClient } from './invoice.client'
+
+export const invoiceQueryKeys = {
+  all: () => [PATHS.INVOICE] as const,
+  list: (params: InvoiceListParams) => [...invoiceQueryKeys.all(), 'list', params] as const,
+}
+
+export const invoiceQueryOptions = {
+  list: (params: InvoiceListParams) =>
+    queryOptions({
+      queryFn: ({ signal }) => invoiceClient.getList(params, signal),
+      queryKey: invoiceQueryKeys.list(params),
+    }),
+}
+```
+
+- Пути API — `PATHS` из `~/shared/config`.
+- HTTP-запросы — Axios через `axiosInstance` из `~/shared/api`.
+- Серверное состояние — TanStack Query через `queryOptions`.
+- Query function передает `AbortSignal` в Axios для отмены запроса.
+- Для пагинации используются `page`, `size` и общий `Response<T>` из `~/shared/lib`.
+- Специальные операции называются по назначению: `getBalance`, `getExcel`, `getFile`.
+- `client` и response-типы остаются внутренними, пока не нужны внешнему потребителю.
 
 ### Имена сегментов и файлов — цель, а не суть
 
@@ -207,7 +268,7 @@ shared/lib/
 
 ## Публичный API
 
-Каждый слайс и каждый сегмент общается с внешним миром через явный публичный API — файл `index.ts` на уровне слайса.
+Каждый слайс общается с внешним миром через явный публичный API — файл `index.ts` в корне слайса. В слоях `app` и `shared`, где слайсов нет, public API может определяться на уровне сегментов. Внутренним сегментам слайса отдельные barrel-файлы не нужны.
 
 ```
 entities/branch/
@@ -218,12 +279,14 @@ entities/branch/
 
 ```ts
 // entities/branch/index.ts
-export { ... } from './api/branch.client.ts'
-export { ... } from './api/branch.queries.ts'
-export type { ... } from './model/branch.params.ts'
-export type { ... } from './model/branch.responses.ts'
-export { ... } from './model/branch.types.ts'
+export { branchQueryKeys, branchQueryOptions } from './api/branch.queries'
+export type { BranchListParams } from './model/branch.params'
+export type { Branch } from './model/branch.types'
 ```
+
+Экспорты упорядочиваются по пути источника так же, как файлы в VS Code: `api` перед `model`, внутри `model` — `params`, `responses`, `types`. В примере response-типы не входят в публичный контракт, поэтому после `queries` идут `params` и `types`; имена внутри одного export также сортируются по алфавиту.
+
+Публичный API экспортирует только необходимый внешний контракт. `client` открывается для императивных сценариев, например выгрузки файла, а response-типы — только когда они действительно нужны выше по слоям. Слепые реэкспорты `export *` запрещены.
 
 Импортировать напрямую из внутренних файлов слайса запрещено:
 
@@ -231,14 +294,27 @@ export { ... } from './model/branch.types.ts'
 // ✅ Правильно
 import type { Branch } from '~/entities/branch'
 // ❌ Запрещено
-import type { Branch } from '~/entities/branch/model/branch.types.ts'
+import type { Branch } from '~/entities/branch/model/branch.types'
 ```
 
 ---
 
 ## Внутренние импорты
 
-Внутри `src/shared/ui/<group>/<component>/` используйте относительные импорты для файлов того же компонента. Компонент сам обращается к своим сегментам напрямую, без собственного barrel-файла:
+Внутри одного слайса используйте относительные импорты по полному пути. Не импортируйте внутренний код через собственный `index.ts` — это создает риск циклической зависимости:
+
+```ts
+import type { ReportListParams } from '../model/report.params'
+import { reportClient } from './report.client'
+```
+
+Код за пределами слайса обращается к нему только через public API:
+
+```ts
+import { reportQueryOptions } from '~/entities/report'
+```
+
+Внутри `src/shared/ui/<group>/<component>/` компонент также обращается к своим сегментам напрямую, без собственного barrel-файла:
 
 ```ts
 import { buttonVariants } from '../lib/button.variants'
