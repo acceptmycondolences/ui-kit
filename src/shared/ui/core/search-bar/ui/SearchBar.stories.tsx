@@ -94,9 +94,9 @@ export const Default: Story = {
 
     const input = canvas.getByRole('searchbox')
 
-    await userEvent.type(input, 'payments{Enter}')
+    await userEvent.type(input, 'value{Enter}')
     await expect(args.onSearch).toHaveBeenCalledOnce()
-    await expect(args.onSearch).toHaveBeenCalledWith('payments')
+    await expect(args.onSearch).toHaveBeenCalledWith('value')
 
     await userEvent.click(canvas.getByRole('button', { name: 'Clear' }))
     await expect(input).toHaveValue('')

@@ -1,6 +1,7 @@
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { useForm } from 'react-hook-form'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 import * as v from 'valibot'
 
 import { FIELD_LENGTHS } from '~/shared/config'
@@ -21,28 +22,9 @@ import {
   FormSelectField,
   FormTextareaField,
   FormTinField,
+  type FormProps,
 } from '~/shared/ui/addons'
 import { Button, FieldGroup } from '~/shared/ui/core'
-
-const meta = {
-  component: Form,
-  parameters: {
-    actions: {
-      disable: true,
-    },
-    controls: {
-      disable: true,
-    },
-    interactions: {
-      disable: true,
-    },
-  },
-  title: 'Components/Form',
-} satisfies Meta<typeof Form>
-
-export default meta
-
-type Story = StoryObj<typeof meta>
 
 const Schema = v.object({
   cardExpiry: v.pipe(
@@ -83,6 +65,32 @@ const Schema = v.object({
   ),
 })
 
+type FormData = v.InferOutput<typeof Schema>
+
+type FormStoryProps = FormProps & {
+  onValidSubmit: (data: FormData) => void
+}
+
+const meta: Meta<FormStoryProps> = {
+  args: {
+    onValidSubmit: fn(),
+  },
+  component: Form,
+  parameters: {
+    actions: {
+      disable: true,
+    },
+    controls: {
+      disable: true,
+    },
+  },
+  title: 'Components/Form',
+}
+
+export default meta
+
+type Story = StoryObj<typeof meta>
+
 const OPTIONS: SelectOption[] = [
   {
     label: 'Label 1',
@@ -99,8 +107,79 @@ const OPTIONS: SelectOption[] = [
 ]
 
 export const Default: Story = {
-  render: function DefaultRender() {
-    const form = useForm<v.InferOutput<typeof Schema>>({
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const body = within(document.body)
+    const cardNumber = canvas.getByRole('textbox', { name: 'Card number' })
+    const input = canvas.getByRole('textbox', { name: 'Input' })
+    const pinfl = canvas.getByRole('textbox', { name: 'PINFL' })
+    const submit = canvas.getByRole('button', { name: 'Submit' })
+
+    await expect(submit).toBeDisabled()
+    await expect(args.onValidSubmit).not.toHaveBeenCalled()
+
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Card expiry' }), '1230')
+    await userEvent.type(cardNumber, '8600 1234 1234 5678')
+    await waitFor(() => expect(canvas.getByRole('alert')).toHaveTextContent('Invalid card number'))
+    await expect(cardNumber).toHaveAttribute('aria-invalid', 'true')
+
+    await userEvent.clear(cardNumber)
+    await userEvent.type(cardNumber, '4111 1111 1111 1111')
+    await waitFor(() => expect(canvas.queryByText('Invalid card number')).not.toBeInTheDocument())
+    await expect(cardNumber).not.toHaveAttribute('aria-invalid', 'true')
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Combobox' }))
+    await userEvent.click(body.getByRole('checkbox', { name: 'Label 1' }))
+    await userEvent.click(body.getByRole('button', { name: 'Save' }))
+
+    const currency = canvas.getByRole('textbox', { name: 'Currency' })
+
+    await userEvent.clear(currency)
+    await userEvent.type(currency, '1234567')
+    await userEvent.type(input, 'Value')
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Invoice number' }), 'AB1234567890123456')
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Name' }), 'aLIBEK123 ALLANAZAROV')
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Phone' }), '901234567')
+    await userEvent.type(pinfl, '12345678901234')
+    await waitFor(() => expect(canvas.getByRole('alert')).toHaveTextContent('Invalid PINFL'))
+    await expect(pinfl).toHaveAttribute('aria-invalid', 'true')
+
+    await userEvent.clear(pinfl)
+    await userEvent.type(pinfl, '12345678901233')
+    await waitFor(() => expect(canvas.queryByText('Invalid PINFL')).not.toBeInTheDocument())
+    await expect(pinfl).not.toHaveAttribute('aria-invalid', 'true')
+
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Receipt number' }), '12-3456-789012')
+
+    await userEvent.click(canvas.getByRole('combobox'))
+    await userEvent.click(body.getByRole('option', { name: 'Label 2' }))
+    await waitFor(() => expect(body.queryByRole('listbox')).not.toBeInTheDocument())
+
+    await userEvent.type(canvas.getByPlaceholderText('Textarea'), 'Value')
+    await userEvent.type(canvas.getByRole('textbox', { name: 'TIN' }), '123-456-7890')
+
+    await waitFor(() => expect(submit).toBeEnabled())
+    await userEvent.click(submit)
+
+    await waitFor(() => expect(args.onValidSubmit).toHaveBeenCalledOnce())
+    await expect(args.onValidSubmit).toHaveBeenCalledWith({
+      cardExpiry: 1230,
+      cardNumber: '4111111111111111',
+      combobox: ['value-1'],
+      currency: 1234567,
+      input: 'Value',
+      invoiceNumber: 12345678901234,
+      name: 'Alibek Allanazarov',
+      phone: '998901234567',
+      pinfl: 12345678901233,
+      receiptNumber: '12345678901',
+      select: 'value-2',
+      textarea: 'Value',
+      tin: 123456789,
+    })
+  },
+  render: function DefaultRender({ onValidSubmit }) {
+    const form = useForm<FormData>({
       defaultValues: {
         cardExpiry: 0,
         cardNumber: '',
@@ -119,8 +198,8 @@ export const Default: Story = {
       resolver: valibotResolver(Schema),
     })
 
-    const onSubmit = (data: v.InferOutput<typeof Schema>) => {
-      console.log(data)
+    const onSubmit = (data: FormData) => {
+      onValidSubmit(data)
     }
 
     const selectedLabel = (selectedCount: number) => {

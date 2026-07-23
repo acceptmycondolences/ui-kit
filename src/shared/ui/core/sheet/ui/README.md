@@ -26,6 +26,72 @@ import { Sheet, SheetBack, SheetClose, SheetContent, SheetDescription, SheetHead
 </Sheet>
 ```
 
+### С навигацией назад
+
+`SheetHeader` передает свойства `backProps` встроенной кнопке `SheetBack`. В примере обработчик возвращает пользователя на предыдущий шаг, а на первом — закрывает `Sheet`.
+
+```tsx
+const STEPS = ['Content 1', 'Content 2'] as const
+
+function WithBackRender() {
+  const [open, setOpen] = useState(false)
+  const [step, setStep] = useState(0)
+
+  const lastStep = STEPS.length - 1
+
+  const handleOpenChange = (newOpen: boolean) => {
+    setOpen(newOpen)
+
+    if (!newOpen) {
+      setStep(0)
+    }
+  }
+
+  const handleBack = () => {
+    if (step === 0) {
+      setOpen(false)
+
+      return
+    }
+
+    setStep((currentStep) => currentStep - 1)
+  }
+
+  const handleNext = () => {
+    setStep((currentStep) => Math.min(currentStep + 1, lastStep))
+  }
+
+  const progress = ((step + 1) / STEPS.length) * 100
+
+  return (
+    <Sheet onOpenChange={handleOpenChange} open={open}>
+      <SheetTrigger className="rounded-none">Trigger</SheetTrigger>
+      <SheetPortal>
+        <SheetOverlay />
+        <SheetContent>
+          <SheetHeader backProps={{ onClick: handleBack }} containerClassName="md:border-b-0" isClose={false}>
+            <SheetTitle>{`Step ${String(step + 1)}`}</SheetTitle>
+            <SheetDescription>Description</SheetDescription>
+          </SheetHeader>
+          <Progress value={progress} />
+          <div className="flex flex-1 flex-col justify-between pt-2 md:pt-6">
+            <div>{STEPS[step]}</div>
+            <div className="grid grid-cols-2 gap-4 pt-4">
+              <Button disabled={step === 0} onClick={handleBack} size="large" variant="outline">
+                Previous
+              </Button>
+              <Button disabled={step === lastStep} onClick={handleNext} size="large" variant="constructive">
+                Next
+              </Button>
+            </div>
+          </div>
+        </SheetContent>
+      </SheetPortal>
+    </Sheet>
+  )
+}
+```
+
 ---
 
 ## Композиция
@@ -100,10 +166,12 @@ SheetHeader (isClose={false} → SheetBack)
 
 Принимает все свойства `div`, а также дополнительные:
 
-| Свойство  | Тип         | По умолчанию | Описание                                                                                     |
-| :-------- | :---------- | :----------- | :------------------------------------------------------------------------------------------- |
-| `action`  | `ReactNode` | —            | Дополнительное действие, отображаемое в правой части шапки (только на мобильных устройствах) |
-| `isClose` | `boolean`   | `true`       | `true` — рендерит `SheetClose`, `false` — рендерит `SheetBack`                               |
+| Свойство             | Тип              | По умолчанию | Описание                                                                                     |
+| :------------------- | :--------------- | :----------- | :------------------------------------------------------------------------------------------- |
+| `action`             | `ReactNode`      | —            | Дополнительное действие, отображаемое в правой части шапки (только на мобильных устройствах) |
+| `backProps`          | `SheetBackProps` | —            | Свойства встроенной кнопки `SheetBack`, включая обработчик перехода на предыдущий шаг        |
+| `containerClassName` | `string`         | —            | Классы внешнего контейнера шапки                                                             |
+| `isClose`            | `boolean`        | `true`       | `true` — рендерит `SheetClose`, `false` — рендерит `SheetBack`                               |
 
 ### SheetTitle
 

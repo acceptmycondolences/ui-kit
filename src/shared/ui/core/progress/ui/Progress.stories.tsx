@@ -39,7 +39,7 @@ export const Default: Story = {
     }, [])
 
     return (
-      <div className="w-100">
+      <div className="w-50 md:w-100">
         <Progress value={value} />
       </div>
     )

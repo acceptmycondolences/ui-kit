@@ -55,6 +55,11 @@ export const Default: Story = {
     await expect(trigger).toHaveFocus()
 
     await userEvent.click(trigger)
+    await userEvent.click(body.getByRole('button', { name: 'Cancel' }))
+    await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument())
+    await expect(trigger).toHaveFocus()
+
+    await userEvent.click(trigger)
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(body.queryByRole('alertdialog')).not.toBeInTheDocument())
     await expect(trigger).toHaveFocus()

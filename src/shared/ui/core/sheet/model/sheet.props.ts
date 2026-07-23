@@ -18,6 +18,8 @@ export type SheetDescriptionProps = ComponentProps<typeof SheetPrimitive.Descrip
 
 export type SheetHeaderProps = ComponentProps<'div'> & {
   action?: ReactNode
+  backProps?: SheetBackProps
+  containerClassName?: string
   isClose?: boolean
 }
 

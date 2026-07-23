@@ -8,6 +8,7 @@ export function Progress({ className, value, ...props }: ProgressProps) {
   return (
     <ProgressPrimitive.Root
       className={classNames('h-1 w-full overflow-x-hidden rounded-lg bg-accent-disabled', className)}
+      value={value}
       {...props}
     >
       <ProgressPrimitive.Indicator

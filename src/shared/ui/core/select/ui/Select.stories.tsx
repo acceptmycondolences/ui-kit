@@ -32,11 +32,11 @@ export const Default: Story = {
 
     const body = within(document.body)
 
-    await userEvent.click(body.getByRole('option', { name: 'Value 2' }))
+    await userEvent.click(body.getByRole('option', { name: 'Value 1' }))
 
-    await expect(trigger).toHaveTextContent('Value 2')
+    await expect(trigger).toHaveTextContent('Value 1')
     await expect(args.onValueChange).toHaveBeenCalledOnce()
-    await expect(args.onValueChange).toHaveBeenCalledWith('value-2')
+    await expect(args.onValueChange).toHaveBeenCalledWith('value-1')
     await waitFor(() => expect(body.queryByRole('listbox')).not.toBeInTheDocument())
 
     await userEvent.click(trigger)

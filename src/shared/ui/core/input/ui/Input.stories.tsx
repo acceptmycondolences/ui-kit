@@ -104,12 +104,12 @@ export const CardExpiry: Story = {
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByRole('textbox', { name: 'Card expiry' })
 
-    await userEvent.type(input, '1234')
-    await expect(input).toHaveValue('12/34')
+    await userEvent.type(input, '1230')
+    await expect(input).toHaveValue('12/30')
 
     await userEvent.clear(input)
-    await userEvent.paste('1234')
-    await expect(input).toHaveValue('12/34')
+    await userEvent.paste('1230')
+    await expect(input).toHaveValue('12/30')
   },
   render: function CardExpiryRender({ ...props }) {
     const [value, setValue] = useState(0)
@@ -437,7 +437,7 @@ export const Disabled: Story = {
     await expect(input).toBeDisabled()
     await expect(input).toHaveValue('Disabled')
 
-    await userEvent.type(input, 'Changed')
+    await userEvent.type(input, 'Value')
 
     await expect(input).toHaveValue('Disabled')
   },

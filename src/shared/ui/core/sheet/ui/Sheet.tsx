@@ -77,7 +77,15 @@ export function SheetDescription({ className, ...props }: SheetDescriptionProps)
   )
 }
 
-export function SheetHeader({ action, children, className, isClose = true, ...props }: SheetHeaderProps) {
+export function SheetHeader({
+  action,
+  backProps,
+  children,
+  className,
+  containerClassName,
+  isClose = true,
+  ...props
+}: SheetHeaderProps) {
   const isMobile = useMediaQuery(MEDIA_QUERIES.MEDIUM)
 
   return (
@@ -86,9 +94,10 @@ export function SheetHeader({ action, children, className, isClose = true, ...pr
         'flex items-start gap-4 pb-3',
         'md:border-b md:pb-4',
         isClose && !isMobile && 'flex-row-reverse',
+        containerClassName,
       )}
     >
-      {isClose ? <SheetClose /> : <SheetBack />}
+      {isClose ? <SheetClose /> : <SheetBack {...backProps} />}
       <div className={classNames('flex flex-col gap-2', className)} {...props}>
         {children}
       </div>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
 import { IconCheck } from '@tabler/icons-react'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 
 import type { SelectOption } from '~/shared/lib'
 import {
@@ -16,9 +17,17 @@ import {
   Popover,
   PopoverContent,
   PopoverTrigger,
+  type CommandProps,
 } from '~/shared/ui/core'
 
-const meta = {
+type CommandStoryProps = CommandProps & {
+  onSelect: (value: string) => void
+}
+
+const meta: Meta<CommandStoryProps> = {
+  args: {
+    onSelect: fn(),
+  },
   component: Command,
   parameters: {
     actions: {
@@ -27,12 +36,9 @@ const meta = {
     controls: {
       disable: true,
     },
-    interactions: {
-      disable: true,
-    },
   },
   title: 'Components/Command',
-} satisfies Meta<typeof Command>
+}
 
 export default meta
 
@@ -54,16 +60,35 @@ const OPTIONS: SelectOption[] = [
 ]
 
 export const Default: Story = {
-  render: function DefaultRender() {
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('combobox')
+
+    await userEvent.type(input, 'Label 1')
+    await expect(canvas.queryByRole('option', { name: 'Label 2' })).not.toBeInTheDocument()
+    await expect(canvas.getByRole('option', { name: 'Label 1' })).toBeInTheDocument()
+
+    await userEvent.clear(input)
+    await userEvent.type(input, 'Missing')
+    await expect(canvas.getByText('Title')).toBeInTheDocument()
+    await expect(canvas.getByText('Description')).toBeInTheDocument()
+
+    await userEvent.clear(input)
+    await userEvent.keyboard('{Home}{Enter}')
+    await expect(args.onSelect).toHaveBeenCalledOnce()
+    await expect(args.onSelect).toHaveBeenCalledWith('value-1')
+  },
+  render: function DefaultRender({ onSelect, ...props }) {
     const [selected, setSelected] = useState('')
 
     const handleSelect = (newValue: string) => {
+      onSelect(newValue)
       setSelected(newValue)
     }
 
     return (
       <div className="w-75">
-        <Command>
+        <Command {...props}>
           <CommandInput placeholder="Placeholder" />
           <CommandList>
             <CommandEmpty className="py-4" description="Description" title="Title" />
@@ -88,6 +113,23 @@ export const Default: Story = {
 }
 
 export const WithPopover: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const body = within(document.body)
+    const trigger = canvas.getByRole('button', { name: 'Trigger' })
+
+    await userEvent.click(trigger)
+    const checkbox = body.getByRole('checkbox', { name: 'Label 2' })
+
+    await userEvent.click(checkbox)
+    await expect(checkbox).toBeChecked()
+
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(body.queryByRole('dialog')).not.toBeInTheDocument())
+
+    await userEvent.click(trigger)
+    await expect(body.getByRole('checkbox', { name: 'Label 2' })).toBeChecked()
+  },
   render: function WithPopoverRender() {
     const [open, setOpen] = useState(false)
     const [search, setSearch] = useState('')
