@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type ClipboardEvent } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, within } from 'storybook/test'
 
 import {
   formatCreditCard,
@@ -27,9 +28,6 @@ const meta = {
     controls: {
       disable: true,
     },
-    interactions: {
-      disable: true,
-    },
   },
   title: 'Components/Field',
 } satisfies Meta<typeof Field>
@@ -39,9 +37,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).queryByRole('alert')).not.toBeInTheDocument()
+  },
   render: () => (
     <Field>
       <Input placeholder="Placeholder" />
+      <FieldError errors={[{}, { message: '' }]} />
     </Field>
   ),
 }
@@ -56,6 +58,9 @@ export const WithDescription: Story = {
 }
 
 export const WithError: Story = {
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('alert')).toHaveTextContent('Error')
+  },
   render: () => (
     <Field data-invalid>
       <Input aria-invalid placeholder="Placeholder" />
@@ -65,6 +70,14 @@ export const WithError: Story = {
 }
 
 export const WithMultipleErrors: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const alert = canvas.getByRole('alert')
+
+    await expect(within(alert).getAllByRole('listitem')).toHaveLength(2)
+    await expect(alert).toHaveTextContent('First error')
+    await expect(alert).toHaveTextContent('Second error')
+  },
   render: () => (
     <Field data-invalid>
       <Input aria-invalid placeholder="Placeholder" />
@@ -72,6 +85,12 @@ export const WithMultipleErrors: Story = {
         errors={[
           {
             message: 'First error',
+          },
+          {
+            message: 'First error',
+          },
+          {
+            message: '',
           },
           {
             message: 'Second error',

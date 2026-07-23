@@ -11,18 +11,19 @@ export const buttonVariants = cva(
       },
       variant: {
         constructive:
-          'bg-constructive text-constructive-foreground hover:bg-constructive-active hover:text-constructive-foreground-active disabled:bg-constructive-disabled disabled:text-constructive-foreground-disabled',
+          'bg-constructive text-constructive-foreground hover:bg-constructive-active hover:text-constructive-foreground-active [&:disabled:not([data-loading])]:bg-constructive-disabled [&:disabled:not([data-loading])]:text-constructive-foreground-disabled',
         destructive:
-          'bg-destructive text-destructive-foreground hover:bg-destructive-active hover:text-destructive-foreground-active disabled:bg-destructive-disabled disabled:text-destructive-foreground-disabled',
-        ghost: 'hover:bg-accent hover:text-accent-foreground disabled:text-accent-foreground-disabled',
+          'bg-destructive text-destructive-foreground hover:bg-destructive-active hover:text-destructive-foreground-active [&:disabled:not([data-loading])]:bg-destructive-disabled [&:disabled:not([data-loading])]:text-destructive-foreground-disabled',
+        ghost:
+          'hover:bg-accent hover:text-accent-foreground [&:disabled:not([data-loading])]:text-accent-foreground-disabled',
         outline:
-          'border-primary hover:bg-accent hover:text-accent-foreground disabled:border-accent-disabled disabled:text-accent-foreground-disabled',
+          'border-primary hover:bg-accent hover:text-accent-foreground [&:disabled:not([data-loading])]:border-accent-disabled [&:disabled:not([data-loading])]:text-accent-foreground-disabled',
         secondary:
-          'bg-secondary text-secondary-foreground hover:bg-secondary/80 disabled:bg-secondary-disabled disabled:text-secondary-foreground-disabled',
+          'bg-secondary text-secondary-foreground hover:bg-secondary/80 [&:disabled:not([data-loading])]:bg-secondary-disabled [&:disabled:not([data-loading])]:text-secondary-foreground-disabled',
         textConstructive:
-          'text-constructive hover:text-constructive-active disabled:text-constructive-foreground-disabled',
+          'text-constructive hover:text-constructive-active [&:disabled:not([data-loading])]:text-constructive-foreground-disabled',
         textDestructive:
-          'text-destructive-foreground hover:text-destructive-foreground-active disabled:text-destructive-foreground-disabled',
+          'text-destructive-foreground hover:text-destructive-foreground-active [&:disabled:not([data-loading])]:text-destructive-foreground-disabled',
       },
     },
   },

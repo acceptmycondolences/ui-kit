@@ -11,6 +11,7 @@ export function SearchBar({
   autoComplete = 'off',
   className,
   defaultOpen,
+  disabled,
   id,
   initialValue,
   onClear,
@@ -121,11 +122,12 @@ export function SearchBar({
         className={classNames(
           'peer inline-flex h-full rounded-full bg-muted text-sm font-medium caret-constructive transition-all duration-300 ease-in-out',
           'placeholder:text-muted-foreground',
-          'disabled:pointer-events-none disabled:opacity-40 aria-invalid:bg-destructive aria-invalid:text-destructive-foreground aria-invalid:caret-destructive-foreground aria-invalid:ring-destructive-foreground/40 aria-invalid:placeholder:text-destructive-foreground',
+          'disabled:pointer-events-none disabled:opacity-40',
           '[&::-webkit-search-cancel-button]:hidden',
           isOpen ? 'w-full py-2 pr-22.5 pl-4' : 'w-0 opacity-0',
           className,
         )}
+        disabled={disabled}
         id={inputId}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
@@ -142,6 +144,7 @@ export function SearchBar({
           'hover:text-primary',
           isOpen && value ? 'pointer-events-auto scale-100 opacity-100' : 'pointer-events-none scale-75 opacity-0',
         )}
+        disabled={disabled}
         onClick={handleClear}
         tabIndex={isOpen && value ? 0 : -1}
       >
@@ -156,6 +159,7 @@ export function SearchBar({
           'peer-disabled:pointer-events-none peer-disabled:bg-constructive-disabled peer-disabled:text-constructive-foreground-disabled',
           !isOpen && 'text-muted-foreground hover:text-primary',
         )}
+        disabled={disabled}
         onClick={toggleOpen}
         ref={toggleButtonRef}
         variant={isOpen ? 'constructive' : undefined}

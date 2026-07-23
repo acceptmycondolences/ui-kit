@@ -1,17 +1,18 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 
 import { Select, SelectContent, SelectItem, SelectPortal, SelectTrigger, SelectValue } from '~/shared/ui/core'
 
 const meta = {
+  args: {
+    onValueChange: fn(),
+  },
   component: Select,
   parameters: {
     actions: {
       disable: true,
     },
     controls: {
-      disable: true,
-    },
-    interactions: {
       disable: true,
     },
   },
@@ -23,8 +24,30 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: () => (
-    <Select>
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const trigger = canvas.getByRole('combobox')
+
+    await userEvent.click(trigger)
+
+    const body = within(document.body)
+
+    await userEvent.click(body.getByRole('option', { name: 'Value 2' }))
+
+    await expect(trigger).toHaveTextContent('Value 2')
+    await expect(args.onValueChange).toHaveBeenCalledOnce()
+    await expect(args.onValueChange).toHaveBeenCalledWith('value-2')
+    await waitFor(() => expect(body.queryByRole('listbox')).not.toBeInTheDocument())
+
+    await userEvent.click(trigger)
+    await expect(body.getByRole('listbox')).toBeInTheDocument()
+
+    await userEvent.keyboard('{Escape}')
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await expect(args.onValueChange).toHaveBeenCalledOnce()
+  },
+  render: ({ ...props }) => (
+    <Select {...props}>
       <SelectTrigger className="rounded-none">
         <SelectValue placeholder="Placeholder" />
       </SelectTrigger>
@@ -40,6 +63,9 @@ export const Default: Story = {
 }
 
 export const Invalid: Story = {
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('combobox')).toHaveAttribute('aria-invalid', 'true')
+  },
   render: () => (
     <Select>
       <SelectTrigger
@@ -60,6 +86,16 @@ export const Invalid: Story = {
 }
 
 export const Disabled: Story = {
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('combobox')
+
+    await expect(trigger).toBeDisabled()
+
+    trigger.click()
+
+    await expect(trigger).toHaveAttribute('aria-expanded', 'false')
+    await expect(within(document.body).queryByRole('listbox')).not.toBeInTheDocument()
+  },
   render: () => (
     <Select disabled>
       <SelectTrigger className="rounded-none disabled:opacity-40">

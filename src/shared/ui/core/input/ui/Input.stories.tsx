@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type ClipboardEvent } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, userEvent, within } from 'storybook/test'
 
 import {
   formatCreditCard,
@@ -71,9 +72,6 @@ const meta = {
     actions: {
       disable: true,
     },
-    interactions: {
-      disable: true,
-    },
   },
   title: 'Components/Input',
 } satisfies Meta<typeof Input>
@@ -103,6 +101,16 @@ export const CardExpiry: Story = {
     inputMode: 'numeric',
     placeholder: 'Card expiry',
   },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Card expiry' })
+
+    await userEvent.type(input, '1234')
+    await expect(input).toHaveValue('12/34')
+
+    await userEvent.clear(input)
+    await userEvent.paste('1234')
+    await expect(input).toHaveValue('12/34')
+  },
   render: function CardExpiryRender({ ...props }) {
     const [value, setValue] = useState(0)
 
@@ -129,6 +137,16 @@ export const CardNumber: Story = {
     autoComplete: 'cc-number',
     inputMode: 'numeric',
     placeholder: 'Card number',
+  },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Card number' })
+
+    await userEvent.type(input, '8600123412345678')
+    await expect(input).toHaveValue('8600 1234 1234 5678')
+
+    await userEvent.clear(input)
+    await userEvent.paste('8600123412345678')
+    await expect(input).toHaveValue('8600 1234 1234 5678')
   },
   render: function CardNumberRender({ ...props }) {
     const [value, setValue] = useState('')
@@ -158,6 +176,16 @@ export const Currency: Story = {
     placeholder: 'Currency',
     suffix: 'UZS',
   },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Currency' })
+
+    await userEvent.type(input, '1234567')
+    await expect(input).toHaveValue(formatNumber(1234567))
+
+    await userEvent.clear(input)
+    await userEvent.paste('1234567')
+    await expect(input).toHaveValue(formatNumber(1234567))
+  },
   render: function NumberRender({ ...props }) {
     const [value, setValue] = useState(0)
 
@@ -177,6 +205,16 @@ export const InvoiceNumber: Story = {
   args: {
     inputMode: 'numeric',
     placeholder: 'Invoice number',
+  },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Invoice number' })
+
+    await userEvent.type(input, 'AB1234567890123456')
+    await expect(input).toHaveValue('12345678901234')
+
+    await userEvent.clear(input)
+    await userEvent.paste('AB1234567890123456')
+    await expect(input).toHaveValue('12345678901234')
   },
   render: function InvoiceNumberRender({ ...props }) {
     const [value, setValue] = useState(0)
@@ -201,6 +239,16 @@ export const Name: Story = {
   args: {
     autoComplete: 'name',
     placeholder: 'Name',
+  },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Name' })
+
+    await userEvent.type(input, 'aLIBEK123 ALLANAZAROV')
+    await expect(input).toHaveValue('Alibek Allanazarov')
+
+    await userEvent.clear(input)
+    await userEvent.paste('aLIBEK123 ALLANAZAROV')
+    await expect(input).toHaveValue('Alibek Allanazarov')
   },
   render: function NameRender({ ...props }) {
     const [value, setValue] = useState('')
@@ -229,6 +277,16 @@ export const Phone: Story = {
     prefix: '+998',
     type: 'tel',
   },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Phone' })
+
+    await userEvent.type(input, '901234567')
+    await expect(input).toHaveValue('90 123 45 67')
+
+    await userEvent.clear(input)
+    await userEvent.paste('+998 90 123 45 67')
+    await expect(input).toHaveValue('90 123 45 67')
+  },
   render: function PhoneNumberRender({ ...props }) {
     const [value, setValue] = useState('')
 
@@ -255,6 +313,16 @@ export const Pinfl: Story = {
     inputMode: 'numeric',
     placeholder: 'PINFL',
   },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'PINFL' })
+
+    await userEvent.type(input, '1234567890123456')
+    await expect(input).toHaveValue('12345678901234')
+
+    await userEvent.clear(input)
+    await userEvent.paste('1234567890123456')
+    await expect(input).toHaveValue('12345678901234')
+  },
   render: function PinflRender({ ...props }) {
     const [value, setValue] = useState(0)
 
@@ -279,6 +347,16 @@ export const ReceiptNumber: Story = {
     inputMode: 'numeric',
     placeholder: 'Receipt number',
   },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Receipt number' })
+
+    await userEvent.type(input, '12-3456-789012')
+    await expect(input).toHaveValue('12345678901')
+
+    await userEvent.clear(input)
+    await userEvent.paste('12-3456-789012')
+    await expect(input).toHaveValue('12345678901')
+  },
   render: function ReceiptNumberRender({ ...props }) {
     const [value, setValue] = useState('')
 
@@ -302,6 +380,16 @@ export const Tin: Story = {
   args: {
     inputMode: 'numeric',
     placeholder: 'TIN',
+  },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'TIN' })
+
+    await userEvent.type(input, '123-456-7890')
+    await expect(input).toHaveValue('123456789')
+
+    await userEvent.clear(input)
+    await userEvent.paste('123-456-7890')
+    await expect(input).toHaveValue('123456789')
   },
   render: function TinRender({ ...props }) {
     const [value, setValue] = useState(0)
@@ -329,13 +417,28 @@ export const Invalid: Story = {
     readOnly: true,
     value: 'Invalid',
   },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('textbox', { name: 'Placeholder' })).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    )
+  },
 }
 
 export const Disabled: Story = {
   args: {
+    defaultValue: 'Disabled',
     disabled: true,
     placeholder: 'Placeholder',
-    readOnly: true,
-    value: 'Disabled',
+  },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole('textbox', { name: 'Placeholder' })
+
+    await expect(input).toBeDisabled()
+    await expect(input).toHaveValue('Disabled')
+
+    await userEvent.type(input, 'Changed')
+
+    await expect(input).toHaveValue('Disabled')
   },
 }

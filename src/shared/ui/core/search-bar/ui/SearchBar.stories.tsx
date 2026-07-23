@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import type { Meta, StoryObj } from '@storybook/react-vite'
-import { fn } from 'storybook/test'
+import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { Button, SearchBar } from '~/shared/ui/core'
 
@@ -10,6 +10,7 @@ const meta = {
     defaultOpen: false,
     initialValue: '',
     onClear: fn(),
+    onOpenChange: fn(),
     onSearch: fn(),
     placeholder: 'Placeholder',
   },
@@ -74,9 +75,6 @@ const meta = {
     actions: {
       disable: true,
     },
-    interactions: {
-      disable: true,
-    },
   },
   title: 'Components/SearchBar',
 } satisfies Meta<typeof SearchBar>
@@ -86,7 +84,32 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: function DefaultRender({ defaultOpen, initialValue, ...props }) {
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const openButton = canvas.getByRole('button', { name: 'Open' })
+
+    await userEvent.click(openButton)
+    await expect(args.onOpenChange).toHaveBeenCalledOnce()
+    await expect(args.onOpenChange).toHaveBeenCalledWith(true)
+
+    const input = canvas.getByRole('searchbox')
+
+    await userEvent.type(input, 'payments{Enter}')
+    await expect(args.onSearch).toHaveBeenCalledOnce()
+    await expect(args.onSearch).toHaveBeenCalledWith('payments')
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Clear' }))
+    await expect(input).toHaveValue('')
+    await expect(args.onClear).toHaveBeenCalledOnce()
+
+    await userEvent.type(input, 'close me{Escape}')
+    await expect(args.onOpenChange).toHaveBeenCalledTimes(2)
+    await expect(args.onOpenChange).toHaveBeenLastCalledWith(false)
+    await expect(args.onClear).toHaveBeenCalledTimes(2)
+    await expect(args.onSearch).toHaveBeenCalledOnce()
+    await expect(openButton).toHaveFocus()
+  },
+  render: function DefaultRender({ defaultOpen, initialValue, onClear, onSearch, ...props }) {
     const [previousInitialValue, setPreviousInitialValue] = useState(initialValue)
     const [query, setQuery] = useState(initialValue ?? '')
 
@@ -96,7 +119,13 @@ export const Default: Story = {
     }
 
     const handleClear = () => {
+      onClear()
       setQuery('')
+    }
+
+    const handleSearch = (value: string) => {
+      onSearch(value)
+      setQuery(value)
     }
 
     const handleCopy = () => {
@@ -111,12 +140,43 @@ export const Default: Story = {
           defaultOpen={defaultOpen}
           initialValue={query}
           onClear={handleClear}
-          onSearch={setQuery}
+          onSearch={handleSearch}
         />
         <Button className="rounded-none" onClick={handleCopy}>
           Copy me!
         </Button>
       </div>
     )
+  },
+}
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('searchbox')
+    const clearButton = canvas.getByRole('button', { name: 'Clear' })
+    const openButton = canvas.getByRole('button', { name: 'Open' })
+
+    await expect(input).toBeDisabled()
+    await expect(input).toHaveAttribute('tabindex', '-1')
+    await expect(clearButton).toBeDisabled()
+    await expect(openButton).toBeDisabled()
+
+    openButton.click()
+    clearButton.click()
+
+    await expect(openButton).toHaveAttribute('aria-expanded', 'false')
+    await expect(args.onClear).not.toHaveBeenCalled()
+    await expect(args.onOpenChange).not.toHaveBeenCalled()
+    await expect(args.onSearch).not.toHaveBeenCalled()
+
+    await userEvent.tab()
+
+    await expect(input).not.toHaveFocus()
+    await expect(clearButton).not.toHaveFocus()
+    await expect(openButton).not.toHaveFocus()
   },
 }

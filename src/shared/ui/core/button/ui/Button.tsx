@@ -5,8 +5,10 @@ import { buttonVariants } from '../lib/button.variants'
 import type { ButtonProps } from '../model/button.props'
 
 export function Button({
+  'aria-busy': ariaBusy,
   children,
   className,
+  disabled,
   isLoading = false,
   size,
   type = 'button',
@@ -15,8 +17,10 @@ export function Button({
 }: ButtonProps) {
   return (
     <button
-      className={classNames(buttonVariants({ size, variant }), className, isLoading && 'pointer-events-none')}
-      tabIndex={isLoading ? -1 : 0}
+      aria-busy={isLoading || ariaBusy}
+      className={classNames(buttonVariants({ size, variant }), className)}
+      data-loading={isLoading || undefined}
+      disabled={isLoading ? true : disabled}
       type={type}
       {...props}
     >

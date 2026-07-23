@@ -6,7 +6,8 @@ import {
 } from '@storybook/addon-docs/blocks'
 import type { Renderer } from 'storybook/internal/csf'
 import { StoryStore } from 'storybook/internal/preview-api'
-import { themes } from 'storybook/theming'
+
+import { getTheme } from './themes'
 
 interface DocsContainerProps extends BaseDocsContainerProps {
   context: BaseDocsContainerProps['context'] & {
@@ -15,7 +16,7 @@ interface DocsContainerProps extends BaseDocsContainerProps {
 }
 
 export const DocsContainer = ({ children, context }: PropsWithChildren<DocsContainerProps>) => {
-  const theme = context.store.userGlobals.globals.theme === 'dark' ? themes.dark : themes.light
+  const theme = getTheme(context.store.userGlobals.globals.theme)
 
   return (
     <BaseDocsContainer context={context} theme={theme}>

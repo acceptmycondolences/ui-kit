@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, fn, userEvent, within } from 'storybook/test'
 
 import { Button, BUTTON_SIZES, BUTTON_VARIANTS } from '~/shared/ui/core'
 
 const meta = {
   args: {
     children: 'Label',
+    onClick: fn(),
     size: 'medium',
   },
   argTypes: {
@@ -55,9 +57,6 @@ const meta = {
     actions: {
       disable: true,
     },
-    interactions: {
-      disable: true,
-    },
   },
   title: 'Components/Button',
 } satisfies Meta<typeof Button>
@@ -69,6 +68,50 @@ type Story = StoryObj<typeof meta>
 export const Default: Story = {
   args: {
     size: null,
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await userEvent.click(canvas.getByRole('button', { name: 'Label' }))
+
+    await expect(args.onClick).toHaveBeenCalledOnce()
+  },
+}
+
+export const Disabled: Story = {
+  args: {
+    disabled: true,
+  },
+  play: async ({ args, canvasElement }) => {
+    const button = within(canvasElement).getByRole('button', { name: 'Label' })
+
+    await expect(button).toBeDisabled()
+
+    button.click()
+
+    await expect(args.onClick).not.toHaveBeenCalled()
+  },
+}
+
+export const Loading: Story = {
+  args: {
+    isLoading: true,
+  },
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const button = canvas.getByRole('button')
+
+    await expect(button).toBeDisabled()
+    await expect(button).toHaveAttribute('aria-busy', 'true')
+
+    await userEvent.tab()
+
+    await expect(button).not.toHaveFocus()
+    await expect(canvas.getByRole('status', { name: 'Loading' })).toBeInTheDocument()
+
+    button.click()
+
+    await expect(args.onClick).not.toHaveBeenCalled()
   },
 }
 
