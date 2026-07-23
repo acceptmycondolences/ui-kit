@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test'
 
 import {
   DropdownMenu,
@@ -11,9 +12,17 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
+  type DropdownMenuProps,
 } from '~/shared/ui/core'
 
-const meta = {
+type DropdownMenuStoryProps = DropdownMenuProps & {
+  onItemClick: () => void
+}
+
+const meta: Meta<DropdownMenuStoryProps> = {
+  args: {
+    onItemClick: fn(),
+  },
   component: DropdownMenu,
   parameters: {
     actions: {
@@ -22,25 +31,43 @@ const meta = {
     controls: {
       disable: true,
     },
-    interactions: {
-      disable: true,
-    },
   },
   title: 'Components/DropdownMenu',
-} satisfies Meta<typeof DropdownMenu>
+}
 
 export default meta
 
 type Story = StoryObj<typeof meta>
 
 export const Default: Story = {
-  render: () => (
-    <DropdownMenu>
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement)
+    const body = within(document.body)
+    const trigger = canvas.getByRole('button', { name: 'Trigger' })
+
+    await userEvent.click(trigger)
+    await expect(body.getByRole('menu')).toBeInTheDocument()
+
+    await userEvent.keyboard('{ArrowDown}')
+    await expect(body.getByRole('menuitem', { name: 'Value 1' })).toHaveFocus()
+
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(body.queryByRole('menu')).not.toBeInTheDocument())
+
+    await userEvent.click(trigger)
+    await userEvent.click(body.getByRole('menuitem', { name: 'Value 1' }))
+    await expect(args.onItemClick).toHaveBeenCalledOnce()
+    await waitFor(() => expect(body.queryByRole('menu')).not.toBeInTheDocument())
+  },
+  render: ({ onItemClick, ...props }) => (
+    <DropdownMenu {...props}>
       <DropdownMenuTrigger className="rounded-none">Trigger</DropdownMenuTrigger>
       <DropdownMenuPortal>
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuItem className="h-11 px-3 font-medium">Value 1</DropdownMenuItem>
+            <DropdownMenuItem className="h-11 px-3 font-medium" onClick={onItemClick}>
+              Value 1
+            </DropdownMenuItem>
             <DropdownMenuItem className="h-11 px-3 font-medium">Value 2</DropdownMenuItem>
             <DropdownMenuSub>
               <DropdownMenuSubTrigger className="h-11 px-3 font-medium">Value 3</DropdownMenuSubTrigger>
