@@ -1,6 +1,6 @@
 # Repository Instructions
 
-This file is the repository-level `AGENTS.md` for `ui-kit`. Keep it concise and practical: add durable rules only when they prevent repeated mistakes, and move long task-specific guidance into focused markdown files such as `PLANS.md`, `ARCHITECTURE.md`, `CODE-QUALITY.md`, or `PROJECTS.md`.
+This file is the repository-level `AGENTS.md` for `ui-kit`. Keep it concise and practical: add durable rules only when they prevent repeated mistakes, and move long task-specific guidance into focused markdown files such as `PLANS.md`.
 
 ## Instruction Scope
 
@@ -17,10 +17,7 @@ This file is the repository-level `AGENTS.md` for `ui-kit`. Keep it concise and 
 - Do not edit generated output in `dist` manually.
 - Before inventing conventions, read the relevant project docs:
   - `README.md` for setup, commands, exports, and publishing context.
-  - `ARCHITECTURE.md` for architecture rules and module boundaries.
-  - `CODE-QUALITY.md` for linting, formatting, and quality tooling.
   - `INTERACTION-TESTS.md` for Storybook interaction test strategy and coverage expectations.
-  - `PROJECTS.md` for project-specific context when relevant.
 
 ## Ordering Convention
 
@@ -63,8 +60,8 @@ This file is the repository-level `AGENTS.md` for `ui-kit`. Keep it concise and 
 - Follow nearby Vite, React, TypeScript, Tailwind CSS, Radix UI, and Storybook patterns.
 - Follow Feature-Sliced Design import direction. `shared` code must not depend on higher layers.
 - Preserve the public API entrypoints described in `README.md`: config from `src/shared/config/index.ts` and `ui-kit/config`, utilities/types/hooks from `src/shared/lib/index.ts` and `ui-kit/lib`, styles from `ui-kit/styles`, addons from `src/shared/ui/addons/index.ts` and `ui-kit/addons`, addon subpaths from `ui-kit/addons/*`, core UI components from `src/shared/ui/core/index.ts` and `ui-kit/core`, and core component subpaths from `ui-kit/core/*`.
-- Within `src/shared/ui/<group>/<component>`, import the component's own segments relatively. Import shared configuration through `~/shared/config`, shared utilities/types/hooks through `~/shared/lib`, and sibling core components through their nearest public API such as `../../button`. Do not import sibling components through the aggregate `~/shared/ui/core` or `~/shared/ui/addons` barrels in runtime component code; those barrels are for package entrypoints, Storybook stories, and documentation examples.
-- When changing packaging or tree-shaking behavior, inspect `package.json` exports, `vite.config.ts`, and the runtime import boundaries described in `ARCHITECTURE.md`.
+- Within `src/shared/ui/<group>/<component>`, import the component's own segments relatively. Import shared configuration through `~/shared/config`, shared utilities/types/hooks through `~/shared/lib`, and sibling core components through their nearest public API such as `../../button`. Do not import sibling components through the aggregate `~/shared/ui/addons` or `~/shared/ui/core` barrels in runtime component code; those barrels are for package entrypoints, Storybook stories, and documentation examples.
+- When changing packaging or tree-shaking behavior, inspect `package.json` exports, `vite.config.ts`, and the runtime import boundaries.
 - For new public components or public component behavior/prop changes, update the colocated `*.stories.tsx` and `ui/README.md`.
 - Prefer named exports and preserve the library export structure defined in `package.json` and Vite config.
 - Maintain type safety. Avoid `any`, unsafe casts, and runtime assumptions unless there is a clear local precedent and reason.
@@ -89,7 +86,6 @@ This file is the repository-level `AGENTS.md` for `ui-kit`. Keep it concise and 
 - Use `pnpm test-storybook` when interactive component behavior or story `play` functions change.
 - Use `pnpm build-storybook` when Storybook behavior, docs, or visual component surfaces change.
 - Storybook interaction coverage belongs in the component story via `play` functions and `storybook/test`; prefer accessible behavior assertions over styling assertions.
-- CI is GitLab-based. The package job runs `pnpm install --frozen-lockfile` and `pnpm build-storybook`.
 - Use `pnpm validate` only when a full format, fix, lint, and type-check pass is appropriate.
 - If a command cannot be run, report why and explain the remaining risk.
 - When formatting or auto-fix commands modify files, review the diff before finishing.
