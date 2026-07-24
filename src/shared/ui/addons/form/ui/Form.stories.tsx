@@ -138,7 +138,7 @@ export const Default: Story = {
     await userEvent.type(currency, '1234567')
     await userEvent.type(input, 'Value')
     await userEvent.type(canvas.getByRole('textbox', { name: 'Invoice number' }), 'AB1234567890123456')
-    await userEvent.type(canvas.getByRole('textbox', { name: 'Name' }), 'aLIBEK123 ALLANAZAROV')
+    await userEvent.type(canvas.getByRole('textbox', { name: 'Name' }), 'ALLANAZAROV aLIBEK123 Mansurovich456')
     await userEvent.type(canvas.getByRole('textbox', { name: 'Phone' }), '901234567')
     await userEvent.type(pinfl, '12345678901234')
     await waitFor(() => expect(canvas.getByRole('alert')).toHaveTextContent('Invalid PINFL'))
@@ -169,7 +169,7 @@ export const Default: Story = {
       currency: 1234567,
       input: 'Value',
       invoiceNumber: 12345678901234,
-      name: 'Alibek Allanazarov',
+      name: 'Allanazarov Alibek Mansurovich',
       phone: '998901234567',
       pinfl: 12345678901233,
       receiptNumber: '12345678901',

@@ -243,12 +243,12 @@ export const Name: Story = {
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByRole('textbox', { name: 'Name' })
 
-    await userEvent.type(input, 'aLIBEK123 ALLANAZAROV')
-    await expect(input).toHaveValue('Alibek Allanazarov')
+    await userEvent.type(input, 'ALLANAZAROV aLIBEK123 Mansurovich456')
+    await expect(input).toHaveValue('Allanazarov Alibek Mansurovich')
 
     await userEvent.clear(input)
-    await userEvent.paste('aLIBEK123 ALLANAZAROV')
-    await expect(input).toHaveValue('Alibek Allanazarov')
+    await userEvent.paste('ALLANAZAROV aLIBEK123 Mansurovich456')
+    await expect(input).toHaveValue('Allanazarov Alibek Mansurovich')
   },
   render: function NameRender({ ...props }) {
     const [value, setValue] = useState('')
